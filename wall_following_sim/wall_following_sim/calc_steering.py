@@ -82,7 +82,6 @@ class MinimalSubscriber(Node):
         # speed parameter will be initialized to zero.  It will
         # be changed from the command line.
         speed = self.get_parameter('speed').value
-        speed = 1.0
         
         if speed > self.max_speed:
             speed = self.max_speed
