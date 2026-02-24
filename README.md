@@ -15,7 +15,7 @@ Download the repository using
 ```bash
 git clone https://github.com/av-mae-uf/wall_following_sim.git
 ```
-The gps_nav package uses the ackermann_msgs package.  Add the following:
+The wall_following_sim package uses the ackermann_msgs package.  Add the following:
 ```bash
 sudo apt install ros-humble-ackermann-msgs
 ```
@@ -37,5 +37,5 @@ Source the .bashrc file.  Note: It will be sourced every time you open a new ter
 
 Run the command below to see the simulation at work.
 ```bash
-ros2 launch gps_nav simulation_demo.launch.py
+ros2 launch wall_following_sim wall_sim_launch.py
 ``` 
