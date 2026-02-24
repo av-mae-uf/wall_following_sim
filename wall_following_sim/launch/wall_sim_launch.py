@@ -26,7 +26,11 @@ def generate_launch_description():
             parameters = [
                 {'theta_deg': 42.0},  # angle from perp beam to beam 2, deg
                 {'d_LookAhead': 2.5}, # distance to look-ahead point, m
-                {'d_desired': 1.0}  # desired distance from wall, m
+                {'d_desired': 1.0},  # desired distance from wall, m
+                {'speed': 1.0}, # m/sec
+                {'Kp': 0.5},
+                {'Ki': 0.1},
+                {'Kd': 0.1},
             ] 
         ),
         Node(
