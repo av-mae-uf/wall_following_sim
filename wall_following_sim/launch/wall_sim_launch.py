@@ -31,6 +31,9 @@ def generate_launch_description():
                 {'Kp': 0.5},
                 {'Ki': 0.1},
                 {'Kd': 0.1},
+                {'starting_delay': 5.0}, # seconds
+                {'save_to_file': True},
+                {'file_name': 'my_outfile.csv'},
             ] 
         ),
         Node(
