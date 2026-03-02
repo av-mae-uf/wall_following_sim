@@ -3,6 +3,7 @@ from rclpy.node import Node
 
 import math
 import numpy as np
+import time
 
 from geometry_msgs.msg import Point, Twist, PoseStamped, TransformStamped
 from ackermann_msgs.msg import AckermannDriveStamped
@@ -30,6 +31,11 @@ class MinimalSubscriber(Node):
         self.steering_ang_rad = 0.0
         self.declare_parameter('speed', 0.0)
 
+        self.declare_parameter('starting_delay', 0.0)
+
+        self.declare_parameter('save_to_file', False)
+        self.declare_parameter('file_name', 'my_default.csv')
+
         self.max_speed = 6.0
         self.max_ang_deg = 45.0 
 
@@ -45,6 +51,15 @@ class MinimalSubscriber(Node):
         self.timer = self.create_timer(timer_period_sec=1.0, callback=self.timer_callback)
 
         self.id_counter = 0
+
+        self.start_time = time.time()
+
+        self.print_stuff = self.get_parameter('save_to_file').value
+        self.filename = self.get_parameter('file_name').value
+
+        if self.print_stuff:
+            self.fp = open(self.filename, "w")
+            self.fp.write('time (sec), d_wall (m), heading_error_deg, steering_ang_deg\n')
 
     def timer_callback(self):
         #self.get_logger().info(f'\nREADY TO DRAW WALL\n')
@@ -86,12 +101,21 @@ class MinimalSubscriber(Node):
         if speed > self.max_speed:
             speed = self.max_speed
 
+        wait_time =self.get_parameter('starting_delay').value
+        if time.time() - self.start_time < wait_time:
+            speed = 0.0
+
         ang_rad = 0.0
         # publish the Ackerman message
         out_msg = AckermannDriveStamped()
         out_msg.drive.steering_angle = ang_rad
         out_msg.drive.speed = speed
         self.ackerman_publisher.publish(out_msg)
+
+        now = time.time() - self.start_time
+        if self.print_stuff and now>=wait_time:
+            #time (sec), d_wall (m), heading_error_deg, steering_ang_deg
+            self.fp.write(f'{now}, {d_wall}, {delta_e*R2D}, {self.steering_ang_rad*R2D}\n')
 
 
     def publish_line(self, x1, y1, x2, y2, r, g, b, marker_id):
